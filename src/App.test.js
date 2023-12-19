@@ -1,8 +1,13 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+/* eslint-disable testing-library/prefer-screen-queries */
+import React from "react";
+import { render } from "@testing-library/react";
+import App from "./App";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+jest.mock("./page/SignUp", () => () => <div>SignUp Component Mock</div>);
+
+describe("App component", () => {
+  it("renders SignUp component", () => {
+    const { getByText } = render(<App />);
+    expect(getByText("SignUp Component Mock")).toBeInTheDocument();
+  });
 });
