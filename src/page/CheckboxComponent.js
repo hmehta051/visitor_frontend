@@ -36,24 +36,28 @@ const CheckboxComponent = () => {
         visitor_id: visitorList._id,
         drink_id: formData.selectedDrinks,
       };
-
-      const response = await axios.post(
-        `${apiUrl}/api/visitor-drinks`,
-        requestData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.data.status === "success") {
-        setTimeout(() => {
-          navigate("/thank-you");
-        }, 1000);
-        console.log("Selected drinks sent successfully!");
+      if (formData.selectedDrinks.length === 0) {
+        alert("Please Select Drinks");
       } else {
-        console.error("Failed to send selected drinks");
+        const response = await axios.post(
+          `${apiUrl}/api/visitor-drinks`,
+          requestData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.data.status === "success") {
+          setTimeout(() => {
+            navigate("/thank-you");
+          }, 1000);
+          console.log("Selected drinks sent successfully!");
+        } else {
+          console.log(response.data.errors);
+          console.error("Failed to send selected drinks");
+        }
       }
     } catch (error) {
       console.error("Error sending selected drinks:", error);
