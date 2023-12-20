@@ -12,6 +12,7 @@ const SignUp = () => {
   });
   const { setVisitorList } = useContext(ApplicationContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,16 +24,21 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     const response = axios.post(`${apiUrl}/api/visitor/auth`, formData);
     response
       .then(({ data }) => {
         if (data.status === "success") {
+          setLoading(false);
           setVisitorList(data.visitor);
           localStorage.setItem("token", data.token);
           navigate("/visit-request");
         }
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => {
+        console.log(err.message);
+        setLoading(false);
+      });
   };
 
   return (
@@ -109,7 +115,7 @@ const SignUp = () => {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
-              Sign In
+              {loading ? "Loading..." : "Sign In"}
             </button>
           </div>
         </form>

@@ -13,6 +13,7 @@ const VisitRequest = () => {
   const { visitorList } = useContext(ApplicationContext);
   const [person, setPerson] = useState("");
   const [reason, setReason] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [formData] = useState({
     staff_member_id: "",
@@ -42,6 +43,7 @@ const VisitRequest = () => {
     const token = localStorage.getItem("token");
     formData.visitor_id = visitorList._id;
     formData.reason = reason;
+    setLoading(true);
     try {
       const response = await axios.post(
         `${apiUrl}/api/confirm-visit`,
@@ -55,12 +57,15 @@ const VisitRequest = () => {
       );
 
       if (response.data.status === "success") {
+        setLoading(false);
         navigate("/drinks-snacks");
       } else {
+        setLoading(false);
         // Handle errors (e.g., show an error message)
         console.error("Failed to submit visit request");
       }
     } catch (error) {
+      setLoading(false);
       // Handle exceptions or network errors
       console.error("Error submitting visit request:", error);
     }
@@ -158,7 +163,7 @@ const VisitRequest = () => {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
-              Confirm
+              {loading ? "Loading..." : "Confirm"}
             </button>
           </div>
         </form>

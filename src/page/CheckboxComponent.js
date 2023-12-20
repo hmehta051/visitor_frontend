@@ -7,6 +7,7 @@ import { apiUrl } from "../config";
 const CheckboxComponent = () => {
   const [checkboxes, setCheckboxes] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     selectedDrinks: [],
   });
@@ -39,6 +40,7 @@ const CheckboxComponent = () => {
       if (formData.selectedDrinks.length === 0) {
         alert("Please Select Drinks");
       } else {
+        setLoading(true);
         const response = await axios.post(
           `${apiUrl}/api/visitor-drinks`,
           requestData,
@@ -50,16 +52,16 @@ const CheckboxComponent = () => {
           }
         );
         if (response.data.status === "success") {
-          setTimeout(() => {
-            navigate("/thank-you");
-          }, 1000);
-          console.log("Selected drinks sent successfully!");
+          setLoading(false);
+          navigate("/thank-you");
         } else {
+          setLoading(false);
           console.log(response.data.errors);
           console.error("Failed to send selected drinks");
         }
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error sending selected drinks:", error);
     }
   };
@@ -121,16 +123,11 @@ const CheckboxComponent = () => {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               onClick={handleSubmit}
             >
-              Yes
+              {loading ? "Loading..." : "Yes"}
             </button>
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={() => {
-                setTimeout(() => {
-                  navigate("/thank-you");
-                }, 1000);
-                setClickOnNo(true);
-              }}
+              onClick={() => setClickOnNo(true)}
             >
               No,Thanks
             </button>

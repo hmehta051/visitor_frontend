@@ -40,7 +40,7 @@ const ThankYou = () => {
   useEffect(() => {
     setTimeout(() => {
       navigate("/");
-    }, 10000);
+    }, 15000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
